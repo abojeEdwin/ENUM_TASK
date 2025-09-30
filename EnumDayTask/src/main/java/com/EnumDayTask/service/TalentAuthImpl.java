@@ -37,38 +37,44 @@ public class TalentAuthImpl implements TalentAuthService{
         Optional<Talent> foundTalent = talentRepo.findByEmail(createAccountReq.getEmail());
         if (foundTalent.isPresent()) {
             Talent talent = foundTalent.get();
-            switch (talent.getStatus()) {
-                case VERIFIED -> throw new EMAIL_IN_USE(EMAIL_ALREADY_EXISTS);
-                case PENDING_VERIFICATION -> {
-                    String token = jwtUtils.generateToken(talent);
-                    CreateAccountRes response = new CreateAccountRes();
-                    response.setToken(token);
-                    response.setMessage(VERIFICATION_RESENT);
-                    return response;
-                }
+            if (talent.getStatus() == TalentStatus.VERIFIED) {
+                throw new EMAIL_IN_USE(EMAIL_ALREADY_EXISTS);
+            } else {
+                String token = jwtUtils.generateToken(talent);
+                VerificationToken verificationToken = new VerificationToken();
+                verificationToken.setToken(token);
+                verificationToken.setUserEmail(talent.getEmail());
+                verificationToken.setUsed(false);
+                verificationToken.setExpiryDate(jwtUtils.extractExpiration(token));
+                verificationTokenRepository.save(verificationToken);
+
+                CreateAccountRes response = new CreateAccountRes();
+                response.setToken(token);
+                response.setMessage(VERIFICATION_RESENT);
+                return response;
             }
+        } else {
+            String hashedPassword = AppUtils.hashPassword(createAccountReq.getPassword());
+
+            Talent talent = new Talent();
+            talent.setEmail(createAccountReq.getEmail());
+            talent.setPassword(hashedPassword);
+            talent.setStatus(TalentStatus.PENDING_VERIFICATION);
+            Talent savedTalent = talentRepo.save(talent);
+
+            String token = jwtUtils.generateToken(savedTalent);
+            VerificationToken verificationToken = new VerificationToken();
+            verificationToken.setToken(token);
+            verificationToken.setUserEmail(savedTalent.getEmail());
+            verificationToken.setUsed(false);
+            verificationToken.setExpiryDate(jwtUtils.extractExpiration(token));
+            verificationTokenRepository.save(verificationToken);
+
+            CreateAccountRes response = new CreateAccountRes();
+            response.setToken(token);
+            response.setMessage(USER_CREATED);
+            return response;
         }
-        String hashedPassword = AppUtils.hashPassword(createAccountReq.getPassword());
-
-        VerificationToken verificationToken = new VerificationToken();
-
-        Talent talent = new Talent();
-        talent.setEmail(createAccountReq.getEmail());
-        talent.setPassword(hashedPassword);
-        talent.setStatus(TalentStatus.PENDING_VERIFICATION);
-        Talent savedTalent = talentRepo.save(talent);
-        CreateAccountRes response = new CreateAccountRes();
-
-        String token = jwtUtils.generateToken(talent);
-        verificationToken.setToken(token);
-        verificationToken.setUserEmail(savedTalent.getEmail());
-        verificationToken.setUsed(false);
-        verificationToken.setExpiryDate(jwtUtils.extractExpiration(token));
-        verificationTokenRepository.save(verificationToken);
-
-        response.setToken(token);
-        response.setMessage(USER_CREATED);
-        return response;
     }
 
     @Override
@@ -84,25 +90,14 @@ public class TalentAuthImpl implements TalentAuthService{
           storedToken.setUsed(true);
             verificationTokenRepository.save(storedToken);
 
-            Optional<Talent> foundTalent = Optional.ofNullable(talentRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException(AppUtils.USER_NOT_FOUND)));
-            if (foundTalent.isPresent()) {
-                Talent talent = foundTalent.get();
-                talent.setStatus(TalentStatus.VERIFIED);
-                return talentRepo.save(talent);
-            } else {
-                throw new UserNotFoundException(AppUtils.USER_NOT_FOUND);
-            }
+            Talent talent = talentRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException(AppUtils.USER_NOT_FOUND));
+            talent.setStatus(TalentStatus.VERIFIED);
+            return talentRepo.save(talent);
         }
 
     @Override
     public void deleteAll() {
         talentRepo.deleteAll();
+        verificationTokenRepository.deleteAll();
     }
-
-
-
-
-
-
 }
-
