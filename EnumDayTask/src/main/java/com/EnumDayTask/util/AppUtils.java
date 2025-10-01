@@ -19,6 +19,10 @@ public class AppUtils {
     public static final String LOGIN_SUCCESSFUL = "Login successful";
     public static final String EMAIL_IS_NOT_VERIFIED = "Email is not verified";
     public static final String INVALID_CREDENTIALS = "Invalid credentials";
+    public static final String RATE_LIMIT_EXCEEDED = "You have exceeded the maximum number of login attempts. Please try again later.";
+    public static final int MAX_FAILED_ATTEMPTS = 5;
+    public static final int LOCKOUT_DURATION = 15;
+
 
     private static final String EMAIL_REGEX = "^(?!.*\\.\\.)[a-zA-Z0-9](?:[a-zA-Z0-9._%+-]{0,63}[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?\\.[a-zA-Z]{2,63}$\n";
 
@@ -29,12 +33,12 @@ public class AppUtils {
         Matcher matcher = EMAIL_PATTERN.matcher(email);
         return matcher.matches();
     }
-    private static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     public static String hashPassword(String password){
         return passwordEncoder.encode(password);
     }
-    public static boolean verifyPassword(String hashedPassword, String inputPassword) {
-        if (hashedPassword == null || hashedPassword.isEmpty() || inputPassword == null || inputPassword.isEmpty()) {return false;}
-        try {return passwordEncoder.matches(inputPassword, hashedPassword);} catch (IllegalArgumentException e) {return false;}}
+    public static boolean verifyPassword(String rawPassword, String encodedPassword) {
+        if (rawPassword == null || rawPassword.isEmpty() || encodedPassword == null || encodedPassword.isEmpty()) {return false;}
+        try {return passwordEncoder.matches(rawPassword, encodedPassword);} catch (IllegalArgumentException e) {return false;}}
 
 }

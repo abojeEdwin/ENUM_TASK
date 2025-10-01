@@ -6,10 +6,7 @@ import com.EnumDayTask.dto.Request.CreateAccountReq;
 import com.EnumDayTask.dto.Request.LoginTalentReq;
 import com.EnumDayTask.dto.Response.CreateAccountRes;
 import com.EnumDayTask.dto.Response.LoginTalentRes;
-import com.EnumDayTask.exception.EMAIL_IN_USE;
-import com.EnumDayTask.exception.EMAIL_NOT_VERIFIED;
-import com.EnumDayTask.exception.INVALID_CREDENTIAL;
-import com.EnumDayTask.exception.TOKEN_EXPIRED;
+import com.EnumDayTask.exception.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -100,7 +97,7 @@ class TalentAuthImplTest {
         CreateAccountRes response2 = talentService.signup(request);
         assertNotNull(response2);
 
-        assertEquals(response2.getMessage(), "Verification email sent successfully");
+        assertEquals("Verification email sent successfully", response2.getMessage());
     }
 
     @Test
@@ -173,10 +170,33 @@ class TalentAuthImplTest {
         assertEquals(request.getEmail(), verifiedTalent.getEmail());
 
         LoginTalentReq req = new LoginTalentReq();
-        req.setEmail("abojeedwingmail.com");
-        req.setPassword("SecurePassword123!");
+        req.setEmail("abojeedwin@gmail.com");
+        req.setPassword("wrongpassword");
         assertThrows(INVALID_CREDENTIAL.class,()->talentService.login(req));
 
+    }
+
+    @Test
+    public void testRateLimitIsTriggeredAfterMultipleFailedLogins() {
+        CreateAccountReq request = new CreateAccountReq();
+        request.setEmail("abojeedwin@gmail.com");
+        request.setPassword("SecurePassword123!");
+        CreateAccountRes response = talentService.signup(request);
+        assertNotNull(response);
+
+        Talent verifiedTalent = talentService.verifyEmail(response.getToken());
+        assertNotNull(verifiedTalent);
+        assertEquals(TalentStatus.VERIFIED, verifiedTalent.getStatus());
+        assertEquals(request.getEmail(), verifiedTalent.getEmail());
+
+        LoginTalentReq req = new LoginTalentReq();
+        req.setEmail("abojeedwin@gmail.com");
+        req.setPassword("wrongpassword");
+
+        for (int i = 0; i < 5; i++) {
+            assertThrows(INVALID_CREDENTIAL.class, () -> talentService.login(req));}
+
+        assertThrows(RATE_LIMITED.class, () -> talentService.login(req));
     }
 
 }

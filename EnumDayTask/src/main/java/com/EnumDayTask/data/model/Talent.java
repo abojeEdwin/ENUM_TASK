@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,6 +33,9 @@ public class Talent implements UserDetails {
     @Column(nullable = false)
     private String password;
     TalentStatus status;
+    private int failedLoginAttempts;
+    private LocalDateTime lockoutTime;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

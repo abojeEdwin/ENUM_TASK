@@ -15,7 +15,7 @@ import com.EnumDayTask.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.EnumDayTask.util.AppUtils.*;
@@ -100,8 +100,27 @@ public class TalentAuthImpl implements TalentAuthService{
     public LoginTalentRes login(LoginTalentReq request) {
         Talent talent = talentRepo.findByEmail(request.getEmail())
                 .orElseThrow(() -> new INVALID_CREDENTIAL(INVALID_CREDENTIALS));
-        if (talent.getStatus() != TalentStatus.VERIFIED) {throw new EMAIL_NOT_VERIFIED(EMAIL_IS_NOT_VERIFIED);}
-        AppUtils.verifyPassword(request.getPassword(), talent.getPassword());
+
+        if (talent.getLockoutTime() != null && talent.getLockoutTime().isAfter(LocalDateTime.now())) {
+            throw new RATE_LIMITED(RATE_LIMIT_EXCEEDED);
+        } else if (talent.getLockoutTime() != null && talent.getLockoutTime().isBefore(LocalDateTime.now())) {
+            talent.setFailedLoginAttempts(0);
+            talent.setLockoutTime(null);
+            talentRepo.save(talent);}
+        if (talent.getStatus() != TalentStatus.VERIFIED) {
+            throw new EMAIL_NOT_VERIFIED(EMAIL_IS_NOT_VERIFIED);}
+        if (!AppUtils.verifyPassword(request.getPassword(), talent.getPassword())) {
+            talent.setFailedLoginAttempts(talent.getFailedLoginAttempts() + 1);
+            if (talent.getFailedLoginAttempts() >= MAX_FAILED_ATTEMPTS) {
+                talent.setLockoutTime(LocalDateTime.now().plusMinutes(LOCKOUT_DURATION));}
+            talentRepo.save(talent);
+            throw new INVALID_CREDENTIAL(INVALID_CREDENTIALS);
+        }
+
+        talent.setFailedLoginAttempts(0);
+        talent.setLockoutTime(null);
+        talentRepo.save(talent);
+
         String token = jwtUtils.generateToken(talent);
         LoginTalentRes response = new LoginTalentRes();
         response.setToken(token);
