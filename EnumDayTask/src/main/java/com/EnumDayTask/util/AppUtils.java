@@ -11,7 +11,7 @@ public class AppUtils {
     public static final String USER_NOT_FOUND = "User not found";
     public static final String EMAIL_ALREADY_EXISTS = "Email already exists";
     public static final String USER_ALREADY_EXISTS = "User already exists";
-    public static final String USER_CREATED = "User created successfully";
+    public static final String ACCOUNT_CREATED_SUCCESSFULLY = "Account created successfully";
     public static final String VERIFICATION_RESENT = "Verification email sent successfully";
     public static final String TOKEN_INVALID = "Token invalid";
     public static final String TOKEN_ALREADY_USED = "Token already used";
