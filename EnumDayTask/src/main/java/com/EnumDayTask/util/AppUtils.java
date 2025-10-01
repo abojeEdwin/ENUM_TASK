@@ -13,7 +13,7 @@ public class AppUtils {
     public static final String TOKEN_INVALID = "Token invalid";
     public static final String TOKEN_ALREADY_USED = "Token already used";
     public static final String TOKEN_ALREADY_EXPIRED = "Token expired";
-
+    public static final String LOGIN_SUCCESSFUL = "Login successful";
 
 
     private static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
