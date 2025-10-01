@@ -1,23 +1,33 @@
 package com.EnumDayTask.data.model;
 
-
 import com.EnumDayTask.data.Enum.ProfileCompleteness;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Table(name = "talent_profile")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class TalentProfile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long talentId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "id")
+    private Talent talent;
+
     private String transcript;
     private String statementOfPurpose;
-    ProfileCompleteness profileCompleteness;
+    private ProfileCompleteness profileCompleteness;
 
+    public TalentProfile(Talent talent) {
+        this.talent = talent;
+    }
 }

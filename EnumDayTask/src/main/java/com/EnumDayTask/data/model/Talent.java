@@ -25,16 +25,32 @@ public class Talent implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long Id;
+    private long id;
 
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
-    TalentStatus status;
+
+    private TalentStatus status;
+
     private int failedLoginAttempts;
     private LocalDateTime lockoutTime;
+
+    @OneToOne(mappedBy = "talent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private TalentProfile talentProfile;
+
+    public void setTalentProfile(TalentProfile talentProfile) {
+        if (talentProfile == null) {
+            if (this.talentProfile != null) {
+                this.talentProfile.setTalent(null);
+            }
+        } else {
+            talentProfile.setTalent(this);
+        }
+        this.talentProfile = talentProfile;
+    }
 
 
     @Override

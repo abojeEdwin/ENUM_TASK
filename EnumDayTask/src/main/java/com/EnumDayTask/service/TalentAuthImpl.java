@@ -3,6 +3,7 @@ package com.EnumDayTask.service;
 import com.EnumDayTask.data.Enum.TalentStatus;
 import com.EnumDayTask.data.model.BlacklistedToken;
 import com.EnumDayTask.data.model.Talent;
+import com.EnumDayTask.data.model.TalentProfile;
 import com.EnumDayTask.data.model.VerificationToken;
 import com.EnumDayTask.data.repositories.BlacklistedTokenRepo;
 import com.EnumDayTask.data.repositories.TalentRepo;
@@ -67,6 +68,10 @@ public class TalentAuthImpl implements TalentAuthService{
             talent.setEmail(createAccountReq.getEmail());
             talent.setPassword(hashedPassword);
             talent.setStatus(TalentStatus.PENDING_VERIFICATION);
+
+            TalentProfile talentProfile = new TalentProfile(talent);
+            talent.setTalentProfile(talentProfile);
+
             Talent savedTalent = talentRepo.save(talent);
 
             String token = jwtUtils.generateToken(savedTalent);
@@ -137,7 +142,7 @@ public class TalentAuthImpl implements TalentAuthService{
     @Override
     public void logout(String token) {
         if (blacklistedTokenRepo.findByToken(token).isPresent()) {
-            throw new TOKEN_INVALID(TOKEN_INVALID);}
+            throw new TOKEN_INVALID("Token has already been invalidated");}
         BlacklistedToken blacklistedToken = new BlacklistedToken();
         blacklistedToken.setToken(token);
         blacklistedTokenRepo.save(blacklistedToken);
