@@ -17,11 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class TalentProfileController {
 
 
-
     @Autowired
     private TalentProfileImpl talentProfileService;
-
-
 
     @PostMapping("/talent")
     public ResponseEntity<UpdateProfileResponse> updateProfile(@Valid @RequestBody UpdateProfileRequest request){
