@@ -194,7 +194,9 @@ class TalentAuthImplTest {
         req.setPassword("wrongpassword");
 
         for (int i = 0; i < 5; i++) {
-            assertThrows(INVALID_CREDENTIAL.class, () -> talentService.login(req));}
+            assertThrows(INVALID_CREDENTIAL.class, () -> talentService.login(req));
+        }
+
         assertThrows(RATE_LIMITED.class, () -> talentService.login(req));
     }
 
@@ -217,6 +219,27 @@ class TalentAuthImplTest {
         talentService.logout(token);
 
         assertThrows(TOKEN_INVALID.class, () -> talentService.verifyEmail(token));
+    }
+
+    @Test
+    public void testLogoutIsIdempotent() {
+        CreateAccountReq request = new CreateAccountReq();
+        request.setEmail("abojeedwin@gmail.com");
+        request.setPassword("SecurePassword123!");
+        CreateAccountRes response = talentService.signup(request);
+        Talent verifiedTalent = talentService.verifyEmail(response.getToken());
+        assertEquals(TalentStatus.VERIFIED, verifiedTalent.getStatus());
+
+        LoginTalentReq req = new LoginTalentReq();
+        req.setEmail("abojeedwin@gmail.com");
+        req.setPassword("SecurePassword123!");
+        LoginTalentRes res = talentService.login(req);
+        String token = res.getToken();
+        assertNotNull(token);
+
+        talentService.logout(token);
+
+        assertThrows(TOKEN_INVALID.class, () -> talentService.logout(token));
     }
 
 }
