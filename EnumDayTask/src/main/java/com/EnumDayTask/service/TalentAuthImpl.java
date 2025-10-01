@@ -98,19 +98,15 @@ public class TalentAuthImpl implements TalentAuthService{
 
     @Override
     public LoginTalentRes login(LoginTalentReq request) {
-        Optional<Talent> foundTalent = talentRepo.findByEmail(request.getEmail());
-        if (foundTalent.isPresent()) {
-            Talent talent = foundTalent.get();
-            if (talent.getStatus() == TalentStatus.VERIFIED) {
-                AppUtils.verifyPassword(request.getPassword(), talent.getPassword());
-                    String token = jwtUtils.generateToken(talent);
-                    LoginTalentRes response = new LoginTalentRes();
-                    response.setToken(token);
-                    response.setMessage(LOGIN_SUCCESSFUL);
-                return response;
-            }
-        }
-        return null;
+        Talent talent = talentRepo.findByEmail(request.getEmail())
+                .orElseThrow(() -> new INVALID_CREDENTIAL(INVALID_CREDENTIALS));
+        if (talent.getStatus() != TalentStatus.VERIFIED) {throw new EMAIL_NOT_VERIFIED(EMAIL_IS_NOT_VERIFIED);}
+        AppUtils.verifyPassword(request.getPassword(), talent.getPassword());
+        String token = jwtUtils.generateToken(talent);
+        LoginTalentRes response = new LoginTalentRes();
+        response.setToken(token);
+        response.setMessage(LOGIN_SUCCESSFUL);
+        return response;
     }
 
     @Override

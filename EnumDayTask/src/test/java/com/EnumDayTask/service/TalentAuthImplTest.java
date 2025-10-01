@@ -7,6 +7,8 @@ import com.EnumDayTask.dto.Request.LoginTalentReq;
 import com.EnumDayTask.dto.Response.CreateAccountRes;
 import com.EnumDayTask.dto.Response.LoginTalentRes;
 import com.EnumDayTask.exception.EMAIL_IN_USE;
+import com.EnumDayTask.exception.EMAIL_NOT_VERIFIED;
+import com.EnumDayTask.exception.INVALID_CREDENTIAL;
 import com.EnumDayTask.exception.TOKEN_EXPIRED;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -140,6 +142,40 @@ class TalentAuthImplTest {
         assertNotNull(res);
         assertNotNull(res.getToken());
         assertEquals("Login successful", res.getMessage());
+
+    }
+
+    @Test
+    public void testUserLoginWhenEmailNotVerified(){
+        CreateAccountReq request = new CreateAccountReq();
+        request.setEmail("abojeedwin@gmail.com");
+        request.setPassword("SecurePassword123!");
+        CreateAccountRes response = talentService.signup(request);
+        assertNotNull(response);
+
+        LoginTalentReq req = new LoginTalentReq();
+        req.setEmail("abojeedwin@gmail.com");
+        req.setPassword("SecurePassword123!");
+        assertThrows(EMAIL_NOT_VERIFIED.class,()->talentService.login(req));
+    }
+
+    @Test
+    public void testUserLoginWithInvalidCredentials(){
+        CreateAccountReq request = new CreateAccountReq();
+        request.setEmail("abojeedwin@gmail.com");
+        request.setPassword("SecurePassword123!");
+        CreateAccountRes response = talentService.signup(request);
+        assertNotNull(response);
+
+        Talent verifiedTalent = talentService.verifyEmail(response.getToken());
+        assertNotNull(verifiedTalent);
+        assertEquals(TalentStatus.VERIFIED, verifiedTalent.getStatus());
+        assertEquals(request.getEmail(), verifiedTalent.getEmail());
+
+        LoginTalentReq req = new LoginTalentReq();
+        req.setEmail("abojeedwingmail.com");
+        req.setPassword("SecurePassword123!");
+        assertThrows(INVALID_CREDENTIAL.class,()->talentService.login(req));
 
     }
 

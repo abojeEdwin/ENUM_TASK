@@ -2,6 +2,9 @@ package com.EnumDayTask.util;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class AppUtils {
 
 
@@ -14,8 +17,18 @@ public class AppUtils {
     public static final String TOKEN_ALREADY_USED = "Token already used";
     public static final String TOKEN_ALREADY_EXPIRED = "Token expired";
     public static final String LOGIN_SUCCESSFUL = "Login successful";
+    public static final String EMAIL_IS_NOT_VERIFIED = "Email is not verified";
+    public static final String INVALID_CREDENTIALS = "Invalid credentials";
 
+    private static final String EMAIL_REGEX = "^(?!.*\\.\\.)[a-zA-Z0-9](?:[a-zA-Z0-9._%+-]{0,63}[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?\\.[a-zA-Z]{2,63}$\n";
 
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
+
+    public static boolean isValidEmail(String email) {
+        if (email == null) return false;
+        Matcher matcher = EMAIL_PATTERN.matcher(email);
+        return matcher.matches();
+    }
     private static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     public static String hashPassword(String password){
         return passwordEncoder.encode(password);
