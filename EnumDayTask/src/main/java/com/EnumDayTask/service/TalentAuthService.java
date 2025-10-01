@@ -13,5 +13,6 @@ public interface TalentAuthService {
     CreateAccountRes signup(CreateAccountReq createAccountReq);
     Talent verifyEmail(String token);
     LoginTalentRes login(LoginTalentReq request);
+    void logout(String token);
     void deleteAll();
 }

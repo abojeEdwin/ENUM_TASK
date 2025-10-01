@@ -24,6 +24,7 @@ public class AppUtils {
     public static final int LOCKOUT_DURATION = 15;
 
 
+
     private static final String EMAIL_REGEX = "^(?!.*\\.\\.)[a-zA-Z0-9](?:[a-zA-Z0-9._%+-]{0,63}[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?\\.[a-zA-Z]{2,63}$\n";
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);

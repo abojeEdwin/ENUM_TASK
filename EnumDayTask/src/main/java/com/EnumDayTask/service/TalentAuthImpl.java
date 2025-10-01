@@ -1,8 +1,10 @@
 package com.EnumDayTask.service;
 
 import com.EnumDayTask.data.Enum.TalentStatus;
+import com.EnumDayTask.data.model.BlacklistedToken;
 import com.EnumDayTask.data.model.Talent;
 import com.EnumDayTask.data.model.VerificationToken;
+import com.EnumDayTask.data.repositories.BlacklistedTokenRepo;
 import com.EnumDayTask.data.repositories.TalentRepo;
 import com.EnumDayTask.data.repositories.VerificationTokenRepo;
 import com.EnumDayTask.dto.Request.CreateAccountReq;
@@ -32,6 +34,9 @@ public class TalentAuthImpl implements TalentAuthService{
 
     @Autowired
     private VerificationTokenRepo verificationTokenRepository;
+
+    @Autowired
+    private BlacklistedTokenRepo blacklistedTokenRepo;
 
 
     @Override
@@ -81,6 +86,8 @@ public class TalentAuthImpl implements TalentAuthService{
 
     @Override
     public Talent verifyEmail(String token) {
+        if (blacklistedTokenRepo.findByToken(token).isPresent()) {
+            throw new TOKEN_INVALID(TOKEN_INVALID);}
         boolean isExpired = jwtUtils.isTokenExpired(token);
         if(isExpired){throw new TOKEN_EXPIRED(TOKEN_ALREADY_EXPIRED);}
 
@@ -116,7 +123,6 @@ public class TalentAuthImpl implements TalentAuthService{
             talentRepo.save(talent);
             throw new INVALID_CREDENTIAL(INVALID_CREDENTIALS);
         }
-
         talent.setFailedLoginAttempts(0);
         talent.setLockoutTime(null);
         talentRepo.save(talent);
@@ -129,8 +135,18 @@ public class TalentAuthImpl implements TalentAuthService{
     }
 
     @Override
+    public void logout(String token) {
+        if (blacklistedTokenRepo.findByToken(token).isPresent()) {
+            throw new TOKEN_INVALID(TOKEN_INVALID);}
+        BlacklistedToken blacklistedToken = new BlacklistedToken();
+        blacklistedToken.setToken(token);
+        blacklistedTokenRepo.save(blacklistedToken);
+    }
+
+    @Override
     public void deleteAll() {
         talentRepo.deleteAll();
         verificationTokenRepository.deleteAll();
+        blacklistedTokenRepo.deleteAll();
     }
 }
