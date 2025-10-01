@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.EnumDayTask.util.AppUtils.PROFILE_UPDATED_SUCCESSFULLY;
 import static com.EnumDayTask.util.AppUtils.USER_NOT_FOUND;
 
 @Service
@@ -48,12 +49,10 @@ public class TalentProfileImpl implements TalentProfileService {
         } else if (completeness == 50) {
             completenessEnum = ProfileCompleteness.FIFTY;
         } else {
-            completenessEnum = ProfileCompleteness.ZERO;
-        }
+            completenessEnum = ProfileCompleteness.ZERO;}
         profile.setProfileCompleteness(completenessEnum);
         talentProfileRepo.saveAndFlush(profile);
-
-        return new UpdateProfileResponse("Profile updated successfully", completenessEnum, missingFields);
+        return new UpdateProfileResponse(PROFILE_UPDATED_SUCCESSFULLY, completenessEnum, missingFields);
     }
 
     @Override
@@ -66,15 +65,11 @@ public class TalentProfileImpl implements TalentProfileService {
     public ViewProfileResponse viewProfile(long talentId) {
         TalentProfile profile = talentProfileRepo.findById(talentId)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
-
         List<String> missingFields = new ArrayList<>();
         if (profile.getTranscript() == null || profile.getTranscript().isEmpty()) {
-            missingFields.add("transcript");
-        }
+            missingFields.add("transcript");}
         if (profile.getStatementOfPurpose() == null || profile.getStatementOfPurpose().isEmpty()) {
-            missingFields.add("statementOfPurpose");
-        }
-
+            missingFields.add("statementOfPurpose");}
         return new ViewProfileResponse(
                 profile.getTalent().getEmail(),
                 profile.getProfileCompleteness(),
