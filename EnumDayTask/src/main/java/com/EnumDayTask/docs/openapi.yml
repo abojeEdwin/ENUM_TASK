@@ -49,7 +49,7 @@ paths:
 
   /v1/auth/verify-email:
     post:
-      summary: Verify user email with a token
+      summary: Verify talent email with a token
       tags:
         - Authentication
       parameters:
@@ -81,7 +81,7 @@ paths:
 
   /v1/auth/login:
     post:
-      summary: Authenticate user and get a JWT token
+      summary: Authenticate talent and get a JWT token
       tags:
         - Authentication
       requestBody:

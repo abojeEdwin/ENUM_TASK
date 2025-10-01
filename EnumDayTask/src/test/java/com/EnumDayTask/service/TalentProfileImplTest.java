@@ -167,10 +167,12 @@ class TalentProfileImplTest {
         String token = res.getToken();
         assertNotNull(token);
 
+        // Re-fetch the Talent to ensure its associated TalentProfile is up-to-date
+        Talent freshTalent = talentService.findTalentById(verifiedTalent.getId()); // Assuming a findTalentById method exists
 
-        ViewProfileResponse viewProfileResponse = talentProfileService.viewProfile(verifiedTalent.getId());
+        ViewProfileResponse viewProfileResponse = talentProfileService.viewProfile(freshTalent.getId());
         assertNotNull(viewProfileResponse);
-        assertEquals(verifiedTalent.getEmail(), viewProfileResponse.getEmail());
+        assertEquals(freshTalent.getEmail(), viewProfileResponse.getEmail());
         assertEquals(ProfileCompleteness.ZERO, viewProfileResponse.getCompleteness());
         assertTrue(viewProfileResponse.getMissingFields().contains("transcript"));
         assertTrue(viewProfileResponse.getMissingFields().contains("statementOfPurpose"));

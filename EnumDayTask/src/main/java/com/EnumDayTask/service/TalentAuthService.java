@@ -13,4 +13,5 @@ public interface TalentAuthService {
     LoginTalentRes login(LoginTalentReq request);
     void logout(String token);
     void deleteAll();
+    Talent findTalentById(Long id);
 }

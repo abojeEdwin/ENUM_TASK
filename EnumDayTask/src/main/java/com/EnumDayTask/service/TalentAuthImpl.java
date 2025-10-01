@@ -58,35 +58,25 @@ public class TalentAuthImpl implements TalentAuthService{
                 response.setMessage(VERIFICATION_RESENT);
                 return response;
             }
-        } else {
-            String hashedPassword = AppUtils.hashPassword(createAccountReq.getPassword());
-
-            Talent talent = new Talent();
-            talent.setEmail(createAccountReq.getEmail());
-            talent.setPassword(hashedPassword);
-            talent.setStatus(TalentStatus.PENDING_VERIFICATION);
-
-            // Save talent first to generate its ID
-            Talent savedTalent = talentRepo.save(talent);
-
-            // Now create TalentProfile using the savedTalent which has an ID
-            TalentProfile talentProfile = new TalentProfile(savedTalent);
-            // The constructor already sets ProfileCompleteness.ZERO, so no need to set it again here.
-
-            // Set the bidirectional relationship
-            savedTalent.setTalentProfile(talentProfile);
-
-            // The savedTalent object is now managed and has its profile set.
-            // The transaction will ensure this is persisted.
-
-            String token = jwtUtils.generateToken(savedTalent);
-            saveVerificationToken(savedTalent, token);
-
-            CreateAccountRes response = new CreateAccountRes();
-            response.setToken(token);
-            response.setMessage(ACCOUNT_CREATED_SUCCESSFULLY);
-            return response;
         }
+        String hashedPassword = AppUtils.hashPassword(createAccountReq.getPassword());
+
+        Talent talent = new Talent();
+        talent.setEmail(createAccountReq.getEmail());
+        talent.setPassword(hashedPassword);
+        talent.setStatus(TalentStatus.PENDING_VERIFICATION);
+        Talent savedTalent = talentRepo.save(talent);
+
+        TalentProfile talentProfile = new TalentProfile(savedTalent);
+        savedTalent.setTalentProfile(talentProfile);
+        talentRepo.save(savedTalent);
+
+        String token = jwtUtils.generateToken(savedTalent);
+        saveVerificationToken(savedTalent, token);
+        CreateAccountRes response = new CreateAccountRes();
+        response.setToken(token);
+        response.setMessage(ACCOUNT_CREATED_SUCCESSFULLY);
+        return response;
     }
 
     @Override
@@ -114,7 +104,7 @@ public class TalentAuthImpl implements TalentAuthService{
                 .orElseThrow(() -> new INVALID_CREDENTIAL(INVALID_CREDENTIALS));
 
         if (talent.getLockoutTime() != null && talent.getLockoutTime().isAfter(LocalDateTime.now())) {
-            throw new RATE_LIMIT_EXCEEDED(RATE_LIMIT_EXCEEDED);
+            throw new RATE_LIMITED(RATE_LIMIT_EXCEEDED);
         } else if (talent.getLockoutTime() != null && talent.getLockoutTime().isBefore(LocalDateTime.now())) {
             talent.setFailedLoginAttempts(0);
             talent.setLockoutTime(null);
@@ -153,5 +143,10 @@ public class TalentAuthImpl implements TalentAuthService{
         talentRepo.deleteAll();
         verificationTokenRepository.deleteAll();
         blacklistedTokenRepo.deleteAll();
+    }
+
+    @Override
+    public Talent findTalentById(Long id) {
+        return talentRepo.findById(id).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
     }
 }
