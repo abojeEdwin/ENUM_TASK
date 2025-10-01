@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bb033ce4-002c-42d7-9920-8f13c3d0984e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/docker-publish.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/data_source_mapping.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/EnumDayTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/config/ApplicationConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/config/JwtAuthFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/controller/TalentAuthController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/controller/TalentProfileController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/data/Enum/ProfileCompleteness.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/data/Enum/TalentStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/data/model/BlacklistedToken.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/data/model/Talent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/data/model/TalentProfile.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/data/model/VerificationToken.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/data/repositories/BlacklistedTokenRepo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/data/repositories/TalentProfileRepo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/data/repositories/TalentRepo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/data/repositories/VerificationTokenRepo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/docs/openapi.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/dto/Request/CreateAccountReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/dto/Request/LoginTalentReq.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/dto/Request/UpdateProfileRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/dto/Response/CreateAccountRes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/dto/Response/LoginTalentRes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/dto/Response/UpdateProfileResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/dto/Response/ViewProfileResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/exception/EMAIL_IN_USE.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/exception/EMAIL_NOT_VERIFIED.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/exception/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/exception/INVALID_CREDENTIAL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/exception/RATE_LIMITED.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/exception/TOKEN_ALREADY_USED.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/exception/TOKEN_EXPIRED.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/exception/TOKEN_INVALID.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/exception/UserNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/service/TalentAuthImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/service/TalentAuthService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/service/TalentProfileImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/service/TalentProfileService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/util/AppUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/EnumDayTask/util/JwtUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/EnumDayTask/service/TalentAuthImplTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/EnumDayTask/service/TalentProfileImplTest.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Exception" />
+        <option value="Interface" />
+        <option value="JUnit5 Test Class" />
+        <option value="Class" />
+        <option value="Dockerfile" />
+        <option value="GitHub Workflow" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;abojeEdwin&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/abojeEdwin/ENUM_TASK.git&quot;,
+    &quot;accountId&quot;: &quot;39708011-0d5e-47c7-87c0-6f831a41bf5b&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="33PrKYsXOc8ABTFDFpi1rAlSE1R" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "JUnit.TalentAuthImplTest.executor": "Run",
+    "JUnit.TalentAuthImplTest.testCreateAccountWithAlreadyExistingEmail.executor": "Run",
+    "JUnit.TalentAuthImplTest.testCreateAccountWithValidEmailAndPassword.executor": "Run",
+    "JUnit.TalentAuthImplTest.testLogoutIsIdempotent.executor": "Run",
+    "JUnit.TalentAuthImplTest.testRateLimitIsTriggeredAfterMultipleFailedLogins.executor": "Run",
+    "JUnit.TalentAuthImplTest.testUserAlreadyExistButNotVerifiedAndTriesToSignupAgain.executor": "Run",
+    "JUnit.TalentAuthImplTest.testUserCreateAccountWithValidEmailAndPassword.executor": "Run",
+    "JUnit.TalentAuthImplTest.testUserCreateAccountWithValidEmailAndVerifiesEmail.executor": "Run",
+    "JUnit.TalentAuthImplTest.testUserLoginWhenEmailNotVerified.executor": "Run",
+    "JUnit.TalentAuthImplTest.testUserLoginWithInvalidCredentials.executor": "Run",
+    "JUnit.TalentAuthImplTest.testUserLoginWithValidCredentials.executor": "Run",
+    "JUnit.TalentAuthImplTest.testUserLogsOutSuccessfully.executor": "Run",
+    "JUnit.TalentAuthImplTest.testUserTriesToCreateAccountWithSameValidEmailAndIsVerified.executor": "Run",
+    "JUnit.TalentAuthImplTest.testUserTriesToVerifyEmailWithExpiredToken.executor": "Run",
+    "JUnit.TalentProfileImplTest.executor": "Run",
+    "JUnit.TalentProfileImplTest.testAuthenticatedUserProfileCreatedWith0PercentCompleteness.executor": "Run",
+    "JUnit.TalentProfileImplTest.testAuthenticatedUserProfileCreatedWith100PercentCompleteness.executor": "Run",
+    "JUnit.TalentProfileImplTest.testAuthenticatedUserProfileCreatedWith50PercentCompleteness.executor": "Run",
+    "JUnit.TalentProfileImplTest.testAuthenticatedUserReturnsMissingFieldsForIncompleteProfile.executor": "Run",
+    "JUnit.TalentProfileImplTest.testAuthenticatedUserViewProfile.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.EnumDayTask.executor": "Run",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_directory_selection": "/home/omachoko/ENUM_TASK/EnumDayTask/src/test/java/com/EnumDayTask/service",
+    "last_opened_file_path": "/home/omachoko/ENUM_TASK",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "/home/omachoko/ENUM_TASK/EnumDayTask/src/main/java/com/EnumDayTask/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveInnerDialog.RECENTS_KEY">
+      <recent name="com.EnumDayTask.data.Enum" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.EnumDayTask.service" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.EnumDayTask">
+    <configuration name="TalentAuthImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="EnumDayTask" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.EnumDayTask.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.EnumDayTask.service" />
+      <option name="MAIN_CLASS_NAME" value="com.EnumDayTask.service.TalentAuthImplTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TalentAuthImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="EnumDayTask" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.EnumDayTask.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.EnumDayTask.service" />
+      <option name="MAIN_CLASS_NAME" value="com.EnumDayTask.service.TalentAuthImplTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TalentProfileImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="EnumDayTask" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.EnumDayTask.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.EnumDayTask.service" />
+      <option name="MAIN_CLASS_NAME" value="com.EnumDayTask.service.TalentProfileImplTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TalentProfileImplTest.testAuthenticatedUserProfileCreatedWith0PercentCompleteness" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="EnumDayTask" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.EnumDayTask.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.EnumDayTask.service" />
+      <option name="MAIN_CLASS_NAME" value="com.EnumDayTask.service.TalentProfileImplTest" />
+      <option name="METHOD_NAME" value="testAuthenticatedUserProfileCreatedWith0PercentCompleteness" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TalentProfileImplTest.testAuthenticatedUserReturnsMissingFieldsForIncompleteProfile" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="EnumDayTask" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.EnumDayTask.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.EnumDayTask.service" />
+      <option name="MAIN_CLASS_NAME" value="com.EnumDayTask.service.TalentProfileImplTest" />
+      <option name="METHOD_NAME" value="testAuthenticatedUserReturnsMissingFieldsForIncompleteProfile" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TalentProfileImplTest.testAuthenticatedUserViewProfile" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="EnumDayTask" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.EnumDayTask.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.EnumDayTask.service" />
+      <option name="MAIN_CLASS_NAME" value="com.EnumDayTask.service.TalentProfileImplTest" />
+      <option name="METHOD_NAME" value="testAuthenticatedUserViewProfile" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EnumDayTask" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="EnumDayTask" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.EnumDayTask.EnumDayTask" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.TalentAuthImplTest" />
+        <item itemvalue="JUnit.TalentProfileImplTest" />
+        <item itemvalue="JUnit.TalentProfileImplTest.testAuthenticatedUserReturnsMissingFieldsForIncompleteProfile" />
+        <item itemvalue="JUnit.TalentProfileImplTest.testAuthenticatedUserViewProfile" />
+        <item itemvalue="JUnit.TalentProfileImplTest.testAuthenticatedUserProfileCreatedWith0PercentCompleteness" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bb033ce4-002c-42d7-9920-8f13c3d0984e" name="Changes" comment="" />
+      <created>1759229491967</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1759229491967</updated>
+      <workItem from="1759229494999" duration="19207000" />
+      <workItem from="1759262378004" duration="422000" />
+      <workItem from="1759265137486" duration="4463000" />
+      <workItem from="1759273231934" duration="2292000" />
+      <workItem from="1759304814424" duration="13792000" />
+      <workItem from="1759318808681" duration="537000" />
+      <workItem from="1759320190924" duration="7231000" />
+      <workItem from="1759335937112" duration="9713000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

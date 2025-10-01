@@ -1,0 +1,152 @@
+package com.EnumDayTask.service;
+
+import com.EnumDayTask.data.Enum.TalentStatus;
+import com.EnumDayTask.data.model.BlacklistedToken;
+import com.EnumDayTask.data.model.Talent;
+import com.EnumDayTask.data.model.TalentProfile;
+import com.EnumDayTask.data.model.VerificationToken;
+import com.EnumDayTask.data.repositories.BlacklistedTokenRepo;
+import com.EnumDayTask.data.repositories.TalentRepo;
+import com.EnumDayTask.data.repositories.VerificationTokenRepo;
+import com.EnumDayTask.dto.Request.CreateAccountReq;
+import com.EnumDayTask.dto.Request.LoginTalentReq;
+import com.EnumDayTask.dto.Response.CreateAccountRes;
+import com.EnumDayTask.dto.Response.LoginTalentRes;
+import com.EnumDayTask.exception.*;
+import com.EnumDayTask.util.AppUtils;
+import com.EnumDayTask.util.JwtUtils;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static com.EnumDayTask.util.AppUtils.*;
+
+
+@Service
+@AllArgsConstructor
+public class TalentAuthImpl implements TalentAuthService{
+
+    private final TalentRepo talentRepo;
+    private final JwtUtils jwtUtils;
+    private final VerificationTokenRepo verificationTokenRepository;
+    private final BlacklistedTokenRepo blacklistedTokenRepo;
+
+    private void saveVerificationToken(Talent talent, String token) {
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setUserEmail(talent.getEmail());
+        verificationToken.setUsed(false);
+        verificationToken.setExpiryDate(jwtUtils.extractExpiration(token));
+        verificationTokenRepository.save(verificationToken);
+    }
+
+    @Override
+    public CreateAccountRes signup(CreateAccountReq createAccountReq) throws EMAIL_IN_USE{
+        Optional<Talent> foundTalent = talentRepo.findByEmail(createAccountReq.getEmail());
+        if (foundTalent.isPresent()) {
+            Talent talent = foundTalent.get();
+            if (talent.getStatus() == TalentStatus.VERIFIED) {
+                throw new EMAIL_IN_USE(EMAIL_ALREADY_EXISTS);
+            } else {
+                String token = jwtUtils.generateToken(talent);
+                saveVerificationToken(talent, token);
+
+                CreateAccountRes response = new CreateAccountRes();
+                response.setToken(token);
+                response.setMessage(VERIFICATION_RESENT);
+                return response;
+            }
+        }
+        String hashedPassword = AppUtils.hashPassword(createAccountReq.getPassword());
+
+        Talent talent = new Talent();
+        talent.setEmail(createAccountReq.getEmail());
+        talent.setPassword(hashedPassword);
+        talent.setStatus(TalentStatus.PENDING_VERIFICATION);
+        Talent savedTalent = talentRepo.save(talent);
+
+        TalentProfile talentProfile = new TalentProfile(savedTalent);
+        savedTalent.setTalentProfile(talentProfile);
+        talentRepo.save(savedTalent);
+
+        String token = jwtUtils.generateToken(savedTalent);
+        saveVerificationToken(savedTalent, token);
+        CreateAccountRes response = new CreateAccountRes();
+        response.setToken(token);
+        response.setMessage(ACCOUNT_CREATED_SUCCESSFULLY);
+        return response;
+    }
+
+    @Override
+    public Talent verifyEmail(String token) {
+        if (blacklistedTokenRepo.findByToken(token).isPresent()) {
+            throw new TOKEN_INVALID(TOKEN_INVALID);}
+        boolean isExpired = jwtUtils.isTokenExpired(token);
+        if(isExpired){throw new TOKEN_EXPIRED(TOKEN_ALREADY_EXPIRED);}
+
+        String email = jwtUtils.extractEmail(token);
+        VerificationToken storedToken = verificationTokenRepository.findByToken(token)
+                .orElseThrow(() -> new TOKEN_INVALID(TOKEN_INVALID));
+        if (storedToken.isUsed()) {throw new TOKEN_ALREADY_USED(TOKEN_ALREADY_USED);}
+
+        Talent talent = talentRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException(AppUtils.USER_NOT_FOUND));
+        talent.setStatus(TalentStatus.VERIFIED);
+        storedToken.setUsed(true);
+        verificationTokenRepository.save(storedToken);
+        return talentRepo.save(talent);
+    }
+
+    @Override
+    public LoginTalentRes login(LoginTalentReq request) {
+        Talent talent = talentRepo.findByEmail(request.getEmail())
+                .orElseThrow(() -> new INVALID_CREDENTIAL(INVALID_CREDENTIALS));
+
+        if (talent.getLockoutTime() != null && talent.getLockoutTime().isAfter(LocalDateTime.now())) {
+            throw new RATE_LIMITED(RATE_LIMIT_EXCEEDED);
+        } else if (talent.getLockoutTime() != null && talent.getLockoutTime().isBefore(LocalDateTime.now())) {
+            talent.setFailedLoginAttempts(0);
+            talent.setLockoutTime(null);
+            talentRepo.save(talent);}
+        if (talent.getStatus() != TalentStatus.VERIFIED) {
+            throw new EMAIL_NOT_VERIFIED(EMAIL_IS_NOT_VERIFIED);}
+        if (!AppUtils.verifyPassword(request.getPassword(), talent.getPassword())) {
+            talent.setFailedLoginAttempts(talent.getFailedLoginAttempts() + 1);
+            if (talent.getFailedLoginAttempts() >= MAX_FAILED_ATTEMPTS) {
+                talent.setLockoutTime(LocalDateTime.now().plusMinutes(LOCKOUT_DURATION));}
+            talentRepo.save(talent);
+            throw new INVALID_CREDENTIAL(INVALID_CREDENTIALS);
+        }
+        talent.setFailedLoginAttempts(0);
+        talent.setLockoutTime(null);
+        talentRepo.save(talent);
+
+        String token = jwtUtils.generateToken(talent);
+        LoginTalentRes response = new LoginTalentRes();
+        response.setToken(token);
+        response.setMessage(LOGIN_SUCCESSFUL);
+        return response;
+    }
+
+    @Override
+    public void logout(String token) {
+        if (blacklistedTokenRepo.findByToken(token).isPresent()) {
+            throw new TOKEN_INVALID("Token has already been invalidated");}
+        BlacklistedToken blacklistedToken = new BlacklistedToken();
+        blacklistedToken.setToken(token);
+        blacklistedTokenRepo.save(blacklistedToken);
+    }
+
+    @Override
+    public void deleteAll() {
+        talentRepo.deleteAll();
+        verificationTokenRepository.deleteAll();
+        blacklistedTokenRepo.deleteAll();
+    }
+
+    @Override
+    public Talent findTalentById(Long id) {
+        return talentRepo.findById(id).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+    }
+}
