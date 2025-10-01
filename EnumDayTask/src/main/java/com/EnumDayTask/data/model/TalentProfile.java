@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Table(name = "talent_profile")
 @Entity
 @NoArgsConstructor
@@ -28,9 +26,9 @@ public class TalentProfile {
     private String transcript;
     private String statementOfPurpose;
     private ProfileCompleteness profileCompleteness;
-    private List<String> missingFields;
 
     public TalentProfile(Talent talent) {
         this.talent = talent;
+        this.profileCompleteness = ProfileCompleteness.ZERO;
     }
 }

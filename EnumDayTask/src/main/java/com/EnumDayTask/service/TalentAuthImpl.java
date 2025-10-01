@@ -1,5 +1,6 @@
 package com.EnumDayTask.service;
 
+import com.EnumDayTask.data.Enum.ProfileCompleteness;
 import com.EnumDayTask.data.Enum.TalentStatus;
 import com.EnumDayTask.data.model.BlacklistedToken;
 import com.EnumDayTask.data.model.Talent;
@@ -15,7 +16,7 @@ import com.EnumDayTask.dto.Response.LoginTalentRes;
 import com.EnumDayTask.exception.*;
 import com.EnumDayTask.util.AppUtils;
 import com.EnumDayTask.util.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,20 +26,22 @@ import static com.EnumDayTask.util.AppUtils.*;
 
 
 @Service
+@AllArgsConstructor
 public class TalentAuthImpl implements TalentAuthService{
 
-    @Autowired
-    private TalentRepo talentRepo;
+    private final TalentRepo talentRepo;
+    private final JwtUtils jwtUtils;
+    private final VerificationTokenRepo verificationTokenRepository;
+    private final BlacklistedTokenRepo blacklistedTokenRepo;
 
-    @Autowired
-    private JwtUtils jwtUtils;
-
-    @Autowired
-    private VerificationTokenRepo verificationTokenRepository;
-
-    @Autowired
-    private BlacklistedTokenRepo blacklistedTokenRepo;
-
+    private void saveVerificationToken(Talent talent, String token) {
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setUserEmail(talent.getEmail());
+        verificationToken.setUsed(false);
+        verificationToken.setExpiryDate(jwtUtils.extractExpiration(token));
+        verificationTokenRepository.save(verificationToken);
+    }
 
     @Override
     public CreateAccountRes signup(CreateAccountReq createAccountReq) throws EMAIL_IN_USE{
@@ -49,12 +52,7 @@ public class TalentAuthImpl implements TalentAuthService{
                 throw new EMAIL_IN_USE(EMAIL_ALREADY_EXISTS);
             } else {
                 String token = jwtUtils.generateToken(talent);
-                VerificationToken verificationToken = new VerificationToken();
-                verificationToken.setToken(token);
-                verificationToken.setUserEmail(talent.getEmail());
-                verificationToken.setUsed(false);
-                verificationToken.setExpiryDate(jwtUtils.extractExpiration(token));
-                verificationTokenRepository.save(verificationToken);
+                saveVerificationToken(talent, token);
 
                 CreateAccountRes response = new CreateAccountRes();
                 response.setToken(token);
@@ -70,17 +68,13 @@ public class TalentAuthImpl implements TalentAuthService{
             talent.setStatus(TalentStatus.PENDING_VERIFICATION);
 
             TalentProfile talentProfile = new TalentProfile(talent);
+            talentProfile.setProfileCompleteness(ProfileCompleteness.ZERO);
             talent.setTalentProfile(talentProfile);
 
             Talent savedTalent = talentRepo.save(talent);
 
             String token = jwtUtils.generateToken(savedTalent);
-            VerificationToken verificationToken = new VerificationToken();
-            verificationToken.setToken(token);
-            verificationToken.setUserEmail(savedTalent.getEmail());
-            verificationToken.setUsed(false);
-            verificationToken.setExpiryDate(jwtUtils.extractExpiration(token));
-            verificationTokenRepository.save(verificationToken);
+            saveVerificationToken(savedTalent, token);
 
             CreateAccountRes response = new CreateAccountRes();
             response.setToken(token);

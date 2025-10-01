@@ -150,4 +150,31 @@ class TalentProfileImplTest {
         assertEquals("Japa", viewProfileResponse.getStatementOfPurpose());
 
     }
+
+    @Test
+    public void testAuthenticatedUserReturnsMissingFieldsForIncompleteProfile(){
+        CreateAccountReq request = new CreateAccountReq();
+        request.setEmail("abojeedwin@gmail.com");
+        request.setPassword("SecurePassword123!");
+        CreateAccountRes response = talentService.signup(request);
+        Talent verifiedTalent = talentService.verifyEmail(response.getToken());
+        assertEquals(TalentStatus.VERIFIED, verifiedTalent.getStatus());
+
+        LoginTalentReq req = new LoginTalentReq();
+        req.setEmail("abojeedwin@gmail.com");
+        req.setPassword("SecurePassword123!");
+        LoginTalentRes res = talentService.login(req);
+        String token = res.getToken();
+        assertNotNull(token);
+
+
+        ViewProfileResponse viewProfileResponse = talentProfileService.viewProfile(verifiedTalent.getId());
+        assertNotNull(viewProfileResponse);
+        assertEquals(verifiedTalent.getEmail(), viewProfileResponse.getEmail());
+        assertEquals(ProfileCompleteness.ZERO, viewProfileResponse.getCompleteness());
+        assertTrue(viewProfileResponse.getMissingFields().contains("transcript"));
+        assertTrue(viewProfileResponse.getMissingFields().contains("statementOfPurpose"));
+        assertEquals(2, viewProfileResponse.getMissingFields().size());
+
+    }
 }

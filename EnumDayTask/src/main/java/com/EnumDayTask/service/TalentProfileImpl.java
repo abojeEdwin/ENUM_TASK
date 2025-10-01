@@ -7,9 +7,9 @@ import com.EnumDayTask.dto.Request.UpdateProfileRequest;
 import com.EnumDayTask.dto.Response.UpdateProfileResponse;
 import com.EnumDayTask.dto.Response.ViewProfileResponse;
 import com.EnumDayTask.exception.UserNotFoundException;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,10 @@ import java.util.List;
 import static com.EnumDayTask.util.AppUtils.USER_NOT_FOUND;
 
 @Service
+@AllArgsConstructor
 public class TalentProfileImpl implements TalentProfileService {
-    @Autowired
-    TalentProfileRepo talentProfileRepo;
+
+    private final TalentProfileRepo talentProfileRepo;
 
     @Override
     @Transactional
@@ -36,15 +37,11 @@ public class TalentProfileImpl implements TalentProfileService {
         if (profile.getTranscript() != null && !profile.getTranscript().isEmpty()) {
             completeness += 50;
         } else {
-            missingFields.add("transcript");
-        }
-
+            missingFields.add("transcript");}
         if (profile.getStatementOfPurpose() != null && !profile.getStatementOfPurpose().isEmpty()) {
             completeness += 50;
         } else {
-            missingFields.add("statementOfPurpose");
-        }
-
+            missingFields.add("statementOfPurpose");}
         ProfileCompleteness completenessEnum;
         if (completeness == 100) {
             completenessEnum = ProfileCompleteness.HUNDRED;
@@ -54,6 +51,7 @@ public class TalentProfileImpl implements TalentProfileService {
             completenessEnum = ProfileCompleteness.ZERO;
         }
         profile.setProfileCompleteness(completenessEnum);
+        talentProfileRepo.saveAndFlush(profile);
 
         return new UpdateProfileResponse("Profile updated successfully", completenessEnum, missingFields);
     }
@@ -64,7 +62,7 @@ public class TalentProfileImpl implements TalentProfileService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ViewProfileResponse viewProfile(long talentId) {
         TalentProfile profile = talentProfileRepo.findById(talentId)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
