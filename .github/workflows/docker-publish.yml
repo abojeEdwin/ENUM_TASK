@@ -18,7 +18,7 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn package
+        run: mvn clean install
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
