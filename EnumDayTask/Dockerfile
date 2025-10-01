@@ -17,7 +17,6 @@ COPY --from=build /app/target/EnumDayTask-1.0-SNAPSHOT.jar app.jar
 
 EXPOSE 9060
 
-# Healthcheck for the running Spring Boot app
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:9060/actuator/health || exit 1
 

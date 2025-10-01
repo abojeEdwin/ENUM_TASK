@@ -2,7 +2,7 @@ name: Build and Push Docker image
 on:
   push:
     branches:
-      - main
+      - '**'
 
 jobs:
   build:
@@ -33,4 +33,3 @@ jobs:
       - name: Push Docker image
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/enumdaytask:latest
-
