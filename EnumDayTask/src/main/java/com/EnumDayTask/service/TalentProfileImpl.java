@@ -5,14 +5,15 @@ import com.EnumDayTask.data.model.TalentProfile;
 import com.EnumDayTask.data.repositories.TalentProfileRepo;
 import com.EnumDayTask.dto.Request.UpdateProfileRequest;
 import com.EnumDayTask.dto.Response.UpdateProfileResponse;
+import com.EnumDayTask.dto.Response.ViewProfileResponse;
 import com.EnumDayTask.exception.UserNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.EnumDayTask.util.AppUtils.PROFILE_UPDATED_SUCCESSFULLY;
 import static com.EnumDayTask.util.AppUtils.USER_NOT_FOUND;
 
 @Service
@@ -21,6 +22,7 @@ public class TalentProfileImpl implements TalentProfileService {
     TalentProfileRepo talentProfileRepo;
 
     @Override
+    @Transactional
     public UpdateProfileResponse updateProfile(UpdateProfileRequest request) {
         TalentProfile profile = talentProfileRepo.findById(request.getTalentId())
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
@@ -30,14 +32,19 @@ public class TalentProfileImpl implements TalentProfileService {
 
         List<String> missingFields = new ArrayList<>();
         int completeness = 0;
+
         if (profile.getTranscript() != null && !profile.getTranscript().isEmpty()) {
             completeness += 50;
         } else {
-            missingFields.add("transcript");}
+            missingFields.add("transcript");
+        }
+
         if (profile.getStatementOfPurpose() != null && !profile.getStatementOfPurpose().isEmpty()) {
             completeness += 50;
         } else {
-            missingFields.add("statementOfPurpose");}
+            missingFields.add("statementOfPurpose");
+        }
+
         ProfileCompleteness completenessEnum;
         if (completeness == 100) {
             completenessEnum = ProfileCompleteness.HUNDRED;
@@ -47,12 +54,35 @@ public class TalentProfileImpl implements TalentProfileService {
             completenessEnum = ProfileCompleteness.ZERO;
         }
         profile.setProfileCompleteness(completenessEnum);
-        talentProfileRepo.save(profile);
-        return new UpdateProfileResponse(PROFILE_UPDATED_SUCCESSFULLY, completenessEnum, missingFields);
+
+        return new UpdateProfileResponse("Profile updated successfully", completenessEnum, missingFields);
     }
 
     @Override
     public void deleteAll() {
         talentProfileRepo.deleteAll();
+    }
+
+    @Override
+    @Transactional
+    public ViewProfileResponse viewProfile(long talentId) {
+        TalentProfile profile = talentProfileRepo.findById(talentId)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        List<String> missingFields = new ArrayList<>();
+        if (profile.getTranscript() == null || profile.getTranscript().isEmpty()) {
+            missingFields.add("transcript");
+        }
+        if (profile.getStatementOfPurpose() == null || profile.getStatementOfPurpose().isEmpty()) {
+            missingFields.add("statementOfPurpose");
+        }
+
+        return new ViewProfileResponse(
+                profile.getTalent().getEmail(),
+                profile.getProfileCompleteness(),
+                missingFields,
+                profile.getTranscript(),
+                profile.getStatementOfPurpose()
+        );
     }
 }

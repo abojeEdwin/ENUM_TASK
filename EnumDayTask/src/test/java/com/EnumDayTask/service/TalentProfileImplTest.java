@@ -9,6 +9,7 @@ import com.EnumDayTask.dto.Request.UpdateProfileRequest;
 import com.EnumDayTask.dto.Response.CreateAccountRes;
 import com.EnumDayTask.dto.Response.LoginTalentRes;
 import com.EnumDayTask.dto.Response.UpdateProfileResponse;
+import com.EnumDayTask.dto.Response.ViewProfileResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class TalentProfileImplTest {
 
     @Autowired
-    private TalentProfileImpl talentProfileService;
+    private TalentProfileService talentProfileService;
     @Autowired
-    private TalentAuthImpl talentService;
+    private TalentAuthService talentService;
 
     @BeforeEach
     public void setUp() {
@@ -113,5 +114,40 @@ class TalentProfileImplTest {
         assertTrue(updateProfileResponse.getMissingFields().contains("transcript"));
         assertTrue(updateProfileResponse.getMissingFields().contains("statementOfPurpose"));
         assertEquals(2, updateProfileResponse.getMissingFields().size());
+    }
+
+    @Test
+    public void testAuthenticatedUserViewProfile(){
+        CreateAccountReq request = new CreateAccountReq();
+        request.setEmail("abojeedwin@gmail.com");
+        request.setPassword("SecurePassword123!");
+        CreateAccountRes response = talentService.signup(request);
+        Talent verifiedTalent = talentService.verifyEmail(response.getToken());
+        assertEquals(TalentStatus.VERIFIED, verifiedTalent.getStatus());
+
+        LoginTalentReq req = new LoginTalentReq();
+        req.setEmail("abojeedwin@gmail.com");
+        req.setPassword("SecurePassword123!");
+        LoginTalentRes res = talentService.login(req);
+        String token = res.getToken();
+        assertNotNull(token);
+
+        UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest();
+        updateProfileRequest.setTalentId(verifiedTalent.getId());
+        updateProfileRequest.setTranscript("Moving forward");
+        updateProfileRequest.setStatementOfPurpose("Japa");
+        UpdateProfileResponse updateProfileResponse = talentProfileService.updateProfile(updateProfileRequest);
+        assertNotNull(updateProfileResponse);
+        assertEquals(ProfileCompleteness.HUNDRED, updateProfileResponse.getProfileCompleteness());
+        assertTrue(updateProfileResponse.getMissingFields().isEmpty());
+
+        ViewProfileResponse viewProfileResponse = talentProfileService.viewProfile(verifiedTalent.getId());
+        assertNotNull(viewProfileResponse);
+        assertEquals(verifiedTalent.getEmail(), viewProfileResponse.getEmail());
+        assertEquals(ProfileCompleteness.HUNDRED, viewProfileResponse.getCompleteness());
+        assertTrue(viewProfileResponse.getMissingFields().isEmpty());
+        assertEquals("Moving forward", viewProfileResponse.getTranscript());
+        assertEquals("Japa", viewProfileResponse.getStatementOfPurpose());
+
     }
 }
