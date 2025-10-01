@@ -19,5 +19,4 @@ public class UpdateProfileRequest {
     @NotNull(message = "This field is required")
     private String statementOfPurpose;
 
-
 }
