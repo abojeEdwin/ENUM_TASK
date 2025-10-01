@@ -42,4 +42,5 @@ public class TalentAuthController {
     public void logout(@RequestParam String token){
         talentAuthService.logout(token);
     }
+
 }
